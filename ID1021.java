@@ -94,21 +94,17 @@ abstract class ID1021 {
 			int mid = (min + max) / 2 ;
 
 			if (arr[mid] == key) {
-				//System.out.println("TRUE");
 				return true;
 			} else if (arr[mid] < key) {
-				//System.out.println("UP");
 				min = mid + 1;
 				continue;
 			} else if (arr[mid] > key) {
-				//System.out.println("DOWN");
 				max = mid - 1;
 				continue;
 			}
 
-				//System.out.println("FALSE");
 		}
-			return false;
+		return false;
 	}
     
 }

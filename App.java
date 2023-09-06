@@ -6,31 +6,27 @@ import java.util.Random;
 class App {
 
 	public static void main(String[] args) {
-		
 
 		System.out.println("Benchmark (unsorted) (ns)");
-		System.out.println("Size(k)\t\tAvg.\t\t(Avg./Size(k))");
-
+		System.out.println("Size(k)\t\tBest\t\tAvg.\t\t(Avg./Size(k))\t\tWorst");
 		for (int i = 1; i <= 10; i++) {
 
-			int size = i * 100000;
+			int size = i * 10000;
 			int[] sortedArr = ID1021.generateArray(size);
 			int[] unsortedArr  = ID1021.shuffleArray(sortedArr);
 			int max = sortedArr[sortedArr.length - 1];
 
-			//double bestCaseRes = benchmarkBestCase(unsortedArr);
+			double bestCaseRes = benchmarkBestCase(unsortedArr);
 			double averageCaseRes = benchmarkSortedAverageBinary(unsortedArr, max);
-			//double worstCaseRes = benchmarkWorstCase(sortedArr);
+			double worstCaseRes = benchmarkWorstCase(sortedArr);
 
-			System.out.printf("(%d,%.2f)",
-			size/1000,
-			averageCaseRes);
-
-			/*System.out.printf("%d\t&\t%.2f\t&\t%.2f\n",
+			System.out.printf("%d\t&\t%.2f\t&\t%.2f\t&\t%.2f\t&\t\t%.2f\t\n",
 			size / 1000,
+			bestCaseRes,
 			averageCaseRes,
-			averageCaseRes/(size / 1000));*/
-		 }
+			averageCaseRes/(size / 1000),
+			worstCaseRes);
+		}
 
 		// System.out.println("Benchmark: Seach using binary search on sorted array 64M: " + benchmarkSortedAverageBinary(ID1021.generateArray(64000000), 64000000));
 /* 
@@ -215,22 +211,24 @@ class App {
 	}
 
 	
+
+
+
+
+
 	public static double benchmarkSortedAverageBinary(int[] arr, int max) {
 
 		double res = Double.MAX_VALUE;
 
 		System.gc();
-		//ID1021.arrayBinarySearch(arr, arr[0]); // Warp-up.
-
 		for (int i = 0; i < arr.length; i++) {
 			ID1021.arrayBinarySearch(arr, arr[i]); // Warp-up.
 		}
+		//ID1021.arrayBinarySearch(arr, arr[0]); // Warp-up.
+
 		// Best and worst case.
 		for (int i = 0; i < 100; i++) {
 
-		System.gc();
-		//System.gc();
-		//System.gc();
 			// Average case.
 			double tmp = 0;
 			for (int j = 0; j < 1000; j++) {
@@ -259,21 +257,24 @@ class App {
 		double res = Double.MAX_VALUE;
 
 		System.gc();
-		for (int i = 0; i < arr.length; i++) {
-			ID1021.arrayBinarySearch(arr, arr[i]); // Warp-up.
-		}
-		
+		//ID1021.arrayBinarySearch(arr, arr[(arr.length-1)/2]); // Warp-up.
 
 		// Best and worst case.
-		for (int i = 0; i < 10000; i++) {
+		for (int i = 0; i < 100; i++) {
 
+		System.gc();
 			// Best case (First element)
-			double t0 = System.nanoTime();
-			ID1021.arrayBinarySearch(arr, arr[(arr.length-1)/2]);
-			double t1 = System.nanoTime() - t0;
+			double tmp = 0;
+			for (int j = 0; j < 1000; j++) {
+				double t0 = System.nanoTime();
+				ID1021.arrayBinarySearch(arr, arr[(arr.length-1)/2]);
+				double t1 = System.nanoTime();
+				tmp += t1 - t0;
+			}
+			tmp = tmp / 1000;
 			//System.out.println(t1);
-			if (t1 < res && t1 > 0) { // t1 > 0 prevents too fast cases.
-				res = t1;
+			if (tmp < res && tmp > 0) { // t1 > 0 prevents too fast cases.
+				res = tmp;
 			}
 
 		}
@@ -287,20 +288,25 @@ class App {
 		double res = Double.MAX_VALUE;
 
 		System.gc();
-		ID1021.arrayBinarySearch(arr, arr[arr.length-1]); // Warp-up.
+		//ID1021.arrayBinarySearch(arr, arr[arr.length-1]); // Warp-up.
 
 		// Best and worst case.
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 100; i++) {
 
+		System.gc();
 		//System.gc();
 			// Worst case (doesn't find).
-			double t0 = System.nanoTime();
-			//ID1021.arrayBinarySearch(arr, arr[arr.length-1]); // As MAX_VALUE doesn't exist in the array
-			double t1 = System.nanoTime();
-			double t = t1 - t0;
+			double tmp = 0;
+			for (int j = 0; j < 1000; j++) {
+				double t0 = System.nanoTime();
+				ID1021.arrayBinarySearch(arr, Integer.MAX_VALUE); // As MAX_VALUE doesn't exist in the array
+				double t1 = System.nanoTime();
+				tmp += t1 - t0;
+			}
+			tmp = tmp / 1000;
 
-			if (t < res && t > 0) {
-				res = t;
+			if (tmp < res && tmp > 0) {
+				res = tmp;
 			}
 
 		}
