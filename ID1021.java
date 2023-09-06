@@ -89,22 +89,26 @@ abstract class ID1021 {
 		int min = 0;
 		int max = arr.length - 1;
 
-		while (true) {
+		while (min <= max) {
 
-			int mid = (max - min) / 2 ;
+			int mid = (min + max) / 2 ;
 
 			if (arr[mid] == key) {
+				//System.out.println("TRUE");
 				return true;
-			} else if (arr[mid] < key && mid < min) {
+			} else if (arr[mid] < key) {
+				//System.out.println("UP");
 				min = mid + 1;
 				continue;
-			} else if (arr[mid] > key && mid > max) {
+			} else if (arr[mid] > key) {
+				//System.out.println("DOWN");
 				max = mid - 1;
 				continue;
 			}
 
-			return false;
+				//System.out.println("FALSE");
 		}
+			return false;
 	}
     
 }
